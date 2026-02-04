@@ -1,0 +1,23 @@
+{
+  "name": "chat-cwaai",
+  "version": "1.0.0",
+  "description": "This chat will connect to AI models and automatisations systems",
+  "homepage": "https://github.com/nic11371/chat-cwaAI#readme",
+  "bugs": {
+    "url": "https://github.com/nic11371/chat-cwaAI/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nic11371/chat-cwaAI.git"
+  },
+  "license": "ISC",
+  "author": "Nikolay Melnikov",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@hexlet/chat-server": "^2.0.4"
+  }
+}
