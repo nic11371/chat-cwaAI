@@ -1,7 +1,10 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useAuth0 } from "@auth0/auth0-react";
+import './LoginPage.css';
 
 const LoginPage = () => {
+    const { loginWithRedirect } = useAuth0();
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -12,8 +15,8 @@ const LoginPage = () => {
         },
     });
     return (
-        <form onSubmit={formik.handleSubmit}>
-            <div>
+        <form onSubmit={formik.handleSubmit} className="login-form">
+            <div className="input-group">
                 <label htmlFor="email">Email Address</label>
                 <input
                     id="email"
@@ -23,7 +26,7 @@ const LoginPage = () => {
                     value={formik.values.email}
                 />
             </div>
-            <div>
+            <div className="input-group">
                 <label htmlFor="password">Password</label>
                 <input
                     id="password"
@@ -34,7 +37,13 @@ const LoginPage = () => {
                 />
             </div>
 
-            <button type="submit">Submit</button>
+            <button
+                type="submit"
+                onClick={() => loginWithRedirect()} 
+                className="button login"
+            >
+            Submit
+            </button>
         </form>
     );
 };
