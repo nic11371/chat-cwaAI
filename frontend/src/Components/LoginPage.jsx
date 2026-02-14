@@ -1,29 +1,45 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import './LoginPage.css';
+import { useLoginMutation } from '../slices/usersApi';
+import { setCredentials } from '../slices/authSlice';
 
 const LoginPage = () => {
-    const { loginWithRedirect } = useAuth0();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [login, { isLoading }] = useLoginMutation();
+
     const formik = useFormik({
         initialValues: {
-            email: '',
+            username: '',
             password: '',
         },
-        onSubmit: values => {
-            alert(JSON.stringify(values, null, 2));
+        onSubmit: async (values, { setStatus }) => {
+            try {
+                const response = await login(values).unwrap();
+                localStorage.setItem('token', response.token);
+                dispatch(setCredentials({ token: response.token, user: response.username }));
+                navigate('/');
+            } catch (err) {
+                if (err.status === 401) {
+                    setStatus('Неверные имя пользователя или пароль');
+                }
+                console.log('error ', err)
+            }
         },
     });
     return (
         <form onSubmit={formik.handleSubmit} className="login-form">
             <div className="input-group">
-                <label htmlFor="email">Email Address</label>
+                <label htmlFor="username">Username</label>
                 <input
-                    id="email"
-                    name="email"
-                    type="email"
+                    id="username"
+                    name="username"
+                    type="text"
                     onChange={formik.handleChange}
-                    value={formik.values.email}
+                    value={formik.values.username}
                 />
             </div>
             <div className="input-group">
@@ -37,12 +53,13 @@ const LoginPage = () => {
                 />
             </div>
 
+            {formik.status && <div style={{ color: 'red' }}>{formik.status}</div>}
             <button
                 type="submit"
-                onClick={() => loginWithRedirect()} 
                 className="button login"
+                disabled={isLoading}
             >
-            Submit
+                {isLoading ? 'Load...' : 'Submit'}
             </button>
         </form>
     );
